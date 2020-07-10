@@ -98,5 +98,10 @@ router.get('/getTicketInfo', context.getTicketInfo);
 
 //register
 router.post('/user/register',user.register)
+//login
+router.post('/user/login',user.login)
+
+//userinfo
+router.get('/user/getuserinfo',user.getUserInfo)
 
 module.exports = router;
