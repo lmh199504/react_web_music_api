@@ -41,7 +41,6 @@ exports.register = async (ctx,next) => {
         }
     }else {
       const saveData =  await new UserModel({username,password:md5(password)}).save()
-        console.log(saveData)
         ctx.session.username = saveData.username
         ctx.status = 200
         ctx.body = {
@@ -102,6 +101,11 @@ exports.getUserInfo = async  (ctx,next) => {
 }
 
 exports.logout = async (ctx,next) => {
-
+    ctx.session.username = undefined
+    ctx.status = 200
+    ctx.body = {
+        code:0,
+        msg:"退出成功"
+    }
 }
 

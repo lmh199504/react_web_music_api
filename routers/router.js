@@ -104,4 +104,7 @@ router.post('/user/login',user.login)
 //userinfo
 router.get('/user/getuserinfo',user.getUserInfo)
 
+//logout
+router.get('/user/logout',user.logout)
+
 module.exports = router;

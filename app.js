@@ -53,7 +53,7 @@ app.use(cors({
 // 使用session
 app.keys = ['secret'];
 const CONFIG = {
-  key: 'koa:sess',        // cookie key (默认koa：sess)
+  key: 'userKey',        // cookie key (默认koa：sess)
   maxAge: 86400000,       // cookie的过期时间,毫秒，默认为1天
   overwrite: true,        // 是否覆盖    (默认default true)
   httpOnly: false,        // cookie是否只有服务器端可以访问,默认为true
