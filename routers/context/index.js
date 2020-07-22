@@ -29,6 +29,9 @@ const getTopLists = require('./getTopLists');
 const getRanks = require('./getRanks');
 const getTicketInfo = require('./getTicketInfo');
 
+const getHomeClassifid = require('./getHomeClassifid')
+const getHomeNewSong = require('./getHomeNewSong')
+
 module.exports = {
   getDownloadQQMusic,
   getHotKey,
@@ -60,4 +63,6 @@ module.exports = {
   getTopLists,
   getRanks,
   getTicketInfo,
+  getHomeClassifid,
+  getHomeNewSong
 }

@@ -107,4 +107,8 @@ router.get('/user/getuserinfo',user.getUserInfo)
 //logout
 router.get('/user/logout',user.logout)
 
+
+router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
+router.get('/getHomeNewSong/:type?',context.getHomeNewSong)
+
 module.exports = router;
