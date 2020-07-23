@@ -110,5 +110,7 @@ router.get('/user/logout',user.logout)
 
 router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)
+router.get('/getHomeNewAblum/:area?',context.getHomeNewAblum)
+
 
 module.exports = router;

@@ -9,12 +9,15 @@ module.exports = async (ctx, next) => {
   const page = +ctx.query.page || 1;
   const num = +ctx.query.limit || 20;
   const start = (page - 1) * num;
+  const area = +ctx.query.area || 1
+
+
   const data = {
     new_album: {
       module: 'newalbum.NewAlbumServer',
       method: 'get_new_album_info',
       param: {
-        area: 1,
+        area,
         start,
         num,
       }
@@ -24,6 +27,7 @@ module.exports = async (ctx, next) => {
       cv: 0
     }
   }
+  console.log(data)
   if (!start) {
     data.new_album_tag = {
       module: 'newalbum.NewAlbumServer',
@@ -33,8 +37,8 @@ module.exports = async (ctx, next) => {
   }
   const params = Object.assign({
     format: 'json',
-    data: JSON.stringify(data),
-  });
+    data: data,
+  },commonParams);
   const props = {
     method: 'get',
     params,

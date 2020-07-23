@@ -15,7 +15,9 @@ module.exports = async (ctx, next) => {
     genre = -100,
     index = -100,
     page = 1
-  } = ctx.query;
+  } = ctx.request.query;
+
+  console.log(ctx.request.query)
   const guid = _guid ? _guid + '' : '1429839143';
   const data = {
     comm: {
@@ -30,11 +32,12 @@ module.exports = async (ctx, next) => {
         sex: +sex,
         genre: +genre,
         index: +index,
-        sin: 0,
+        sin: +(page - 1)*80,
         cur_page: +page
       }
     }
   }
+  console.log(data.singerList.param)
   const params = Object.assign(commonParams, {
     format: 'json',
     data: JSON.stringify(data),
@@ -45,7 +48,7 @@ module.exports = async (ctx, next) => {
     option: {},
   };
   await UCommon(props).then(res => {
-    console.log(res)
+
     const response = res.data;
     ctx.status = 200;
     ctx.body = {

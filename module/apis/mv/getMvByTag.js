@@ -1,12 +1,13 @@
 const y_common = require('../y_common');
 
 module.exports = ({ method = 'get', params = {}, option = {} }) => {
-  const data = Object.assign(params, {
+
+  const data = Object.assign({
     format: 'json',
     outCharset: 'GB2312',
     cmd: 'shoubo',
     lan: 'all',
-  });
+  },params);
   const options = Object.assign(option, {
     params: data,
   });

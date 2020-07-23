@@ -31,7 +31,7 @@ const getTicketInfo = require('./getTicketInfo');
 
 const getHomeClassifid = require('./getHomeClassifid')
 const getHomeNewSong = require('./getHomeNewSong')
-
+const getHomeNewAblum = require('./getHomeNewAblum')
 module.exports = {
   getDownloadQQMusic,
   getHotKey,
@@ -64,5 +64,6 @@ module.exports = {
   getRanks,
   getTicketInfo,
   getHomeClassifid,
-  getHomeNewSong
+  getHomeNewSong,
+  getHomeNewAblum
 }
