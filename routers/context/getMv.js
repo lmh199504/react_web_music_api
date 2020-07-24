@@ -9,8 +9,9 @@ module.exports = async (ctx, next) => {
     version_id = 7,
     size = 20,
     page = 0,
+    order = 1
   } = ctx.query;
-  const start = (page - 1 || 0) * size;
+  const start = (page - 1 || 0) * size || 0;
   const data = {
     comm: {
       ct: 24
@@ -24,17 +25,18 @@ module.exports = async (ctx, next) => {
       module: 'MvService.MvInfoProServer',
       method: 'GetAllocMvInfo',
       param: {
-        start,
-        size,
-        version_id,
-        area_id,
-        order: 1
+        start:start>0?start:0,
+        size:+size,
+        version_id:+version_id,
+        area_id:+area_id,
+        order: +order
       }
     }
-}
+  }
+
   const params = Object.assign({
     format: 'json',
-    data: JSON.stringify(data),
+    data: data,
   });
   const props = {
     method: 'get',

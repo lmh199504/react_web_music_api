@@ -9,6 +9,7 @@ const { _guid, commonParams } = require('../../module/config');
 // genre [1 - 20]
 // index a-z # 1-27
 module.exports = async (ctx, next) => {
+  console.log("113213231321231")
   const {
     area = -100,
     sex = -100,
@@ -17,7 +18,6 @@ module.exports = async (ctx, next) => {
     page = 1
   } = ctx.request.query;
 
-  console.log(ctx.request.query)
   const guid = _guid ? _guid + '' : '1429839143';
   const data = {
     comm: {
@@ -37,7 +37,6 @@ module.exports = async (ctx, next) => {
       }
     }
   }
-  console.log(data.singerList.param)
   const params = Object.assign(commonParams, {
     format: 'json',
     data: JSON.stringify(data),

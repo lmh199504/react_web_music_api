@@ -8,11 +8,11 @@ const {
 module.exports = async (ctx, next) => {
   const page = +ctx.query.page || 1;
   const num = +ctx.query.limit || 20;
-  const start = (page - 1) * num;
+  const start = +(page - 1) * num;
   const area = +ctx.query.area || 1
 
 
-  const data = {
+  const dataT = {
     new_album: {
       module: 'newalbum.NewAlbumServer',
       method: 'get_new_album_info',
@@ -27,9 +27,8 @@ module.exports = async (ctx, next) => {
       cv: 0
     }
   }
-  console.log(data)
   if (!start) {
-    data.new_album_tag = {
+    dataT.new_album_tag = {
       module: 'newalbum.NewAlbumServer',
       method: 'get_new_album_area',
       param: {}
@@ -37,13 +36,14 @@ module.exports = async (ctx, next) => {
   }
   const params = Object.assign({
     format: 'json',
-    data: data,
-  },commonParams);
+    data: dataT,
+  });
   const props = {
     method: 'get',
     params,
     option: {}
   };
+  console.log(props)
   await UCommon(props).then((res) => {
     const response = res.data;
     ctx.status = 200;

@@ -1,10 +1,14 @@
 const {
   UCommon,
 } = require('../../module');
+const {
+  commonParams
+} = require('../../module/config');
+
 const moment = require('moment');
 
 module.exports = async (ctx, next) => {
-  const topId = +ctx.query.limit || 4;
+  const topId = +ctx.query.topId || 4;
   const num = +ctx.query.limit || 20;
   const offset = +ctx.query.page || 0;
   const data = {
