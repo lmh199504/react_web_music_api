@@ -7,13 +7,15 @@ const {
 /**
  * @description: 2, 3
  * @param songs 歌曲信息 [[songmid, songid]]
- * @return: 
+ * @return:
  */
 module.exports = async (ctx, next) => {
-  const {
+  let {
     songs
   } = ctx.request.body;
 
+
+  songs = JSON.parse(songs)
   const params = Object.assign(commonParams, {
     format: "json",
     inCharset: "utf8",
@@ -28,7 +30,7 @@ module.exports = async (ctx, next) => {
     option: {},
     params,
   }
-  
+
   const data = await Promise.all(
     (songs || []).map(
       async song => {
