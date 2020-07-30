@@ -56,6 +56,7 @@ module.exports = {
   getSingerMv,
   getSingerDesc,
   getSingerStarNum,
+
   // radio
   getRadioLists,
   // DigitalAlbum

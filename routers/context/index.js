@@ -17,6 +17,7 @@ const getSingerAlbum = require('./getSingerAlbum');
 const getSingerMv = require('./getSingerMv');
 const getSingerDesc = require('./getSingerDesc');
 const getSingerStarNum = require('./getSingerStarNum');
+const getSingerHotsong = require('./getSingerHotsong')
 const getRadioLists = require('./getRadioLists');
 const getDigitalAlbumLists = require('./getDigitalAlbumLists');
 const getLyric = require('./getLyric');
@@ -52,6 +53,7 @@ module.exports = {
   getSingerMv,
   getSingerDesc,
   getSingerStarNum,
+  getSingerHotsong,
   getRadioLists,
   getDigitalAlbumLists,
   getLyric,

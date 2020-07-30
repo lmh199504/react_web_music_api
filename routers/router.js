@@ -60,7 +60,7 @@ router.get('/getSingerMv/:singermid?/:limit?/:order?', context.getSingerMv);
 router.get('/getSingerDesc/:singermid?', context.getSingerDesc);
 
 router.get('/getSingerStarNum/:singermid?', context.getSingerStarNum);
-
+router.get('/getSingerHotsong/:singermid?', context.getSingerHotsong);
 // radio
 router.get('/getRadioLists', context.getRadioLists);
 
