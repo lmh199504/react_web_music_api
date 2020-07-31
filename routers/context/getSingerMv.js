@@ -5,10 +5,10 @@ const {
 module.exports = async (ctx, next) => {
   const {
     singermid,
-    order,
+    order = 'listen',
     num = 5,
   } = ctx.query;
-  const params = Object.assign({
+  let params = Object.assign({
     singermid,
     order,
     num,
@@ -16,6 +16,7 @@ module.exports = async (ctx, next) => {
   if (order && order.toLowerCase() === 'time') {
     params = Object.assign(params, {
       cmd: 1,
+      begin:0
     })
   }
   const props = {

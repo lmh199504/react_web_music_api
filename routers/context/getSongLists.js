@@ -8,20 +8,24 @@ const {
  * @param {limit} 每页条数[20, 60]
  * @param {categoryId} 分类
  * @param {sortId} 分类
- * @return: 
+ * @return:
  */
 module.exports = async (ctx, next) => {
   const {
-    limit: ein = 19,
-    page: sin = 0,
+    limit=20,
+    page=1,
     sortId = 5,
     categoryId = 10000000
   } = ctx.query;
   const params = Object.assign({
     categoryId,
     sortId,
-    sin,
-    ein,
+    sin: (page - 1) * limit,
+    ein: page * 20 - 1,
+
+  /*sin:开始
+  * ein：结束
+  * */
   });
   const props = {
     method: 'get',

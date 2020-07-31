@@ -61,6 +61,7 @@ router.get('/getSingerDesc/:singermid?', context.getSingerDesc);
 
 router.get('/getSingerStarNum/:singermid?', context.getSingerStarNum);
 router.get('/getSingerHotsong/:singermid?', context.getSingerHotsong);
+router.get('/getSingerAblumList/:singermid?',context.getSingerAblumList)
 // radio
 router.get('/getRadioLists', context.getRadioLists);
 
@@ -112,5 +113,6 @@ router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHom
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)
 router.get('/getHomeNewAblum/:area?',context.getHomeNewAblum)
 
+router.get('/getRadioSong/:radioId?',context.getRadioSong)
 
 module.exports = router;

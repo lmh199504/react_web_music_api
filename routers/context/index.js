@@ -18,6 +18,7 @@ const getSingerMv = require('./getSingerMv');
 const getSingerDesc = require('./getSingerDesc');
 const getSingerStarNum = require('./getSingerStarNum');
 const getSingerHotsong = require('./getSingerHotsong')
+const getSingerAblumList = require('./getSingerAblumList');
 const getRadioLists = require('./getRadioLists');
 const getDigitalAlbumLists = require('./getDigitalAlbumLists');
 const getLyric = require('./getLyric');
@@ -33,6 +34,7 @@ const getTicketInfo = require('./getTicketInfo');
 const getHomeClassifid = require('./getHomeClassifid')
 const getHomeNewSong = require('./getHomeNewSong')
 const getHomeNewAblum = require('./getHomeNewAblum')
+const getRadioSong = require('./getRadioSong')
 module.exports = {
   getDownloadQQMusic,
   getHotKey,
@@ -51,6 +53,7 @@ module.exports = {
   getSimilarSinger,
   getSingerAlbum,
   getSingerMv,
+  getSingerAblumList,
   getSingerDesc,
   getSingerStarNum,
   getSingerHotsong,
@@ -67,5 +70,6 @@ module.exports = {
   getTicketInfo,
   getHomeClassifid,
   getHomeNewSong,
-  getHomeNewAblum
+  getHomeNewAblum,
+  getRadioSong
 }
