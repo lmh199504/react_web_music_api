@@ -107,7 +107,9 @@ router.get('/user/getuserinfo',user.getUserInfo)
 
 //logout
 router.get('/user/logout',user.logout)
-
+router.post('/user/addLoveSong',user.addLoveSong)
+router.post('/user/delLoveSong',user.delLoveSong)
+router.get('/user/getLoveSong',user.getLoveSong)
 
 router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)

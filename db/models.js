@@ -17,3 +17,11 @@ const userChema = mongoose.Schema({
 })
 const UserModel = mongoose.model('user',userChema)
 exports.UserModel = UserModel
+
+const loveSongChema = mongoose.Schema({
+    userId:{type:String,isRequired:true,unique:true},
+    songList:{type:Array,isRequired:true}
+})
+const LoveModel = mongoose.model('love',loveSongChema)
+exports.LoveModel = LoveModel
+
