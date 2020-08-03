@@ -1,5 +1,5 @@
 
-const { UserModel,LoveModel } = require('../../db/models')
+const { UserModel,LoveModel,LoveSingerModel,LoveClassModel } = require('../../db/models')
 const md5 = require('blueimp-md5')
 const filter = { password:0,__v:0 }  //指定过滤的属性
 exports.register = async (ctx,next) => {
@@ -156,7 +156,6 @@ exports.delLoveSong = async (ctx,next) => {
 
     for(let i = 0;i<delList.length;i++){
         let index = songList.findIndex(item => item.songmid === delList[i].songmid)
-        console.log(index)
         if(index !== -1){
             songList.splice(index,1)
         }
@@ -187,6 +186,123 @@ exports.getLoveSong = async (ctx,next) => {
         ctx.body = {
             code:0,
             data:{songList:findData.songList}
+        }
+    }
+}
+
+exports.addLoveSinger = async (ctx,next) => {
+    const { singer } =  ctx.request.body
+    const { username } = ctx.session
+    const { _id } = await UserModel.findOne({username})
+    console.log(_id)
+    const findData = await LoveSingerModel.findOne({userId:_id})
+    if(!findData){
+        const saveData = await new LoveSingerModel({userId:_id,singers:[{...singer}]}).save()
+        ctx.body = {
+            code:0,
+            data:{
+                singers:saveData.singers
+            }
+        }
+    }else{
+        let { singers } = findData
+        const index = singers.findIndex(item => item.singermid === singer.singermid)
+        if(index === -1){
+            await LoveSingerModel.findOneAndUpdate({userId:_id},{singers:[...singers,singer]})
+            ctx.body = {
+                code:0,
+                data:{
+                    singer:[...singers,singer]
+                }
+            }
+        }else{
+            ctx.body = {
+                code:10000,
+                msg:"已经关注了."
+            }
+        }
+    }
+}
+
+
+exports.delLoveSinger = async (ctx,next) => {
+    const { singer } = ctx.request.body
+    const { username } = ctx.session
+    const { _id } = await UserModel.findOne({username})
+    const findeData = await LoveSingerModel.findOne({userId:_id})
+
+    if(findeData === null){
+        ctx.body = {
+            code:10000,
+            msg:'没有关注该歌手.'
+        }
+    }else {
+        const {singers} = findeData
+        const index = singers.findIndex(item => item.singermid === singer.singermid)
+        if(index === -1){
+            ctx.body = {
+                code:10000,
+                msg:'没有关注该歌手.'
+            }
+        }else{
+            singers.splice(index,1)
+            await LoveSingerModel.findOneAndUpdate({userId:_id},{singers})
+            ctx.body = {
+                code:0,
+                data:{
+                    singers
+                }
+            }
+        }
+    }
+}
+
+
+exports.getLoveSinger = async (ctx,next) => {
+    const { username } = ctx.session
+    if(!username){
+        ctx.body = {
+            code:10000,
+            msg:"获取关注歌手失败."
+        }
+    }else{
+        const { _id } = await UserModel.findOne({username})
+        const findData = await LoveSingerModel.findOne({userId:_id})
+        if(!findData){
+            ctx.body = {
+                code:0,
+                data:{
+                    singers:[1,2,3,4,5]
+                }
+            }
+        }else{
+            ctx.body = {
+                code:0,
+                data:{
+                    singers:findData.singers
+                }
+            }
+        }
+    }
+}
+
+
+exports.addLoveClass = async (ctx,next) => {
+    const { username } = ctx.session
+
+    if(!username){
+        ctx.body = {
+            code:10000,
+            msg:"收藏歌单失败."
+        }
+    }else{
+        const { _id } = await UserModel.findOne({username})
+        const findData = await LoveClassModel.findOne({userId:_id})
+        if(!findData){
+            // const { classFid } = findData
+            new LoveClassModel({userId:_id,classFid:[]})
+        }else{
+
         }
     }
 }
