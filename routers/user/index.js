@@ -1,6 +1,7 @@
 
-const { UserModel,LoveModel,LoveSingerModel,LoveClassModel } = require('../../db/models')
+const { UserModel,LoveModel,LoveSingerModel,LoveSheetModel,UserSheetModel } = require('../../db/models')
 const md5 = require('blueimp-md5')
+const uuid = require('uuid')
 const filter = { password:0,__v:0 }  //指定过滤的属性
 exports.register = async (ctx,next) => {
     const { username,password,password2 } = ctx.request.body
@@ -272,7 +273,7 @@ exports.getLoveSinger = async (ctx,next) => {
             ctx.body = {
                 code:0,
                 data:{
-                    singers:[1,2,3,4,5]
+                    singers:[]
                 }
             }
         }else{
@@ -287,9 +288,9 @@ exports.getLoveSinger = async (ctx,next) => {
 }
 
 
-exports.addLoveClass = async (ctx,next) => {
+exports.addLoveSheet = async (ctx,next) => {
     const { username } = ctx.session
-
+    const { sheet } = ctx.request.body
     if(!username){
         ctx.body = {
             code:10000,
@@ -297,12 +298,104 @@ exports.addLoveClass = async (ctx,next) => {
         }
     }else{
         const { _id } = await UserModel.findOne({username})
-        const findData = await LoveClassModel.findOne({userId:_id})
+        const findData = await LoveSheetModel.findOne({userId:_id})
         if(!findData){
-            // const { classFid } = findData
-            new LoveClassModel({userId:_id,classFid:[]})
+            const saveData = await new LoveSheetModel({userId:_id,sheets:[{...sheet}]}).save()
+            console.log(saveData)
+            ctx.body = {
+                code:0,
+                data:{
+                    sheets:[{...sheet}]
+                }
+            }
         }else{
+            const { sheets } = findData
+            await LoveSheetModel.findOneAndUpdate({userId:_id},{sheets:[...sheets,sheet]})
+            ctx.body = {
+                code:0,
+                data:{
+                    sheets:[...sheets,sheet]
+                }
+            }
+        }
+    }
+}
 
+
+exports.delLoveSheet = async (ctx,next) => {
+    const { username } = ctx.session
+    const { sheet } = ctx.request.body
+    if(!username){
+        ctx.body = {
+            code:10000,
+            msg:"删除失败，请重新登录."
+        }
+    }else {
+        const { _id } = await UserModel.findOne({username})
+        const findData = await LoveSheetModel.findOne({userId:_id})
+        if(!findData){
+            ctx.body = {
+                code:10000,
+                msg:"未收藏该歌单."
+            }
+        }else{
+            const { sheets } = findData
+            const index = sheets.findIndex(item => item.disstid === sheet.disstid)
+            if(index === -1){
+                ctx.body = {
+                    code:10000,
+                    msg:'未收藏该歌单...'
+                }
+            }else{
+                sheets.splice(index,1)
+                await LoveSheetModel.findOneAndUpdate({userId:_id},{sheets})
+                ctx.body = {
+                    code:0,
+                    data:{
+                        sheets:sheets
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+exports.getLoveSheets = async (ctx,next) => {
+    const { username } = ctx.session
+    const { _id } = await UserModel.findOne({username})
+    const findData =  await LoveSheetModel.findOne({userId:_id})
+    if(!findData){
+        ctx.body = {
+            code:0,
+            data:{
+                sheets:[]
+            }
+        }
+    }else {
+        const { sheets } = findData
+        ctx.body = {
+            code:0,
+            data:{
+                sheets
+            }
+        }
+    }
+}
+
+
+exports.addUserSheet = async (ctx,next) => {
+    const { username } = ctx.session
+    const { desc,name } = ctx.request.body
+    const file = ctx.request.files.file;
+    console.log(file)
+    
+    const { _id } = await UserModel.findOne({username})
+    const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:uuid.v1()}).save()
+    ctx.body = {
+        code:0,
+        data:{
+            saveData
         }
     }
 }

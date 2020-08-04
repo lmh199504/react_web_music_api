@@ -27,13 +27,15 @@
     "axios": "^0.18.0",
     "blueimp-md5": "^2.16.0",
     "koa": "^2.7.0",
+    "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-session": "^6.0.0",
     "koa-static": "^5.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.22",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

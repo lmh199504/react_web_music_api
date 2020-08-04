@@ -6,7 +6,7 @@ const session = require('koa-session');
 const path = require('path');
 const static = require('koa-static');
 const exec = require('child_process').exec;
-
+const koaBody = require('koa-body');
 const cors = require('./middlewares/koa-cors');
 const router = require('./routers/router');
 require('./util/colors');
@@ -25,6 +25,12 @@ exec('npm info QQ-Music-API version', (err, stdout, stderr) => {
 
 
 app.use(bodyParser());
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    maxFileSize: 200*1024*1024
+  }
+}));
 app.use(static(
   path.join(__dirname,  'public')
 ));

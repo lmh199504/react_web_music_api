@@ -5,6 +5,7 @@ const apis = require('../module/index');
 const context = require('./context');
 const  user = require('./user/index')
 
+
 // downloadQQMusic
 router.get('/downloadQQMusic', context.getDownloadQQMusic);
 
@@ -113,6 +114,12 @@ router.get('/user/getLoveSong',user.getLoveSong)
 router.post('/user/addLoveSinger',user.addLoveSinger)
 router.post('/user/delLoveSinger',user.delLoveSinger)
 router.get('/user/getLoveSinger',user.getLoveSinger)
+
+router.post('/user/addLoveSheet',user.addLoveSheet)
+router.post('/user/delLoveSheet',user.delLoveSheet)
+router.get('/user/getLoveSheet',user.getLoveSheets)
+router.post('/user/addUserSheet',user.addUserSheet)
+
 router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)
 router.get('/getHomeNewAblum/:area?',context.getHomeNewAblum)
