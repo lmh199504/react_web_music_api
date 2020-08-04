@@ -1,4 +1,7 @@
 
+const ossConfig = require('../ossConfig')
+const oc = require('co')
+const OSS = require('ali-oss')
 const { UserModel,LoveModel,LoveSingerModel,LoveSheetModel,UserSheetModel } = require('../../db/models')
 const md5 = require('blueimp-md5')
 const uuid = require('uuid')
@@ -386,16 +389,52 @@ exports.getLoveSheets = async (ctx,next) => {
 
 exports.addUserSheet = async (ctx,next) => {
     const { username } = ctx.session
-    const { desc,name } = ctx.request.body
-    const file = ctx.request.files.file;
-    console.log(file)
-    
-    const { _id } = await UserModel.findOne({username})
-    const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:uuid.v1()}).save()
-    ctx.body = {
-        code:0,
-        data:{
-            saveData
-        }
-    }
+	const { _id } = await UserModel.findOne({username})
+    const { desc,name,file } = ctx.request.body
+	const sheetId = uuid.v1()
+	if(file!== ''){
+		let client = new OSS({ // 连接OSS实例
+		  region:ossConfig.region,
+		  accessKeyId:ossConfig.accessKeyId,
+		  accessKeySecret:ossConfig.accessKeySecret,
+		  bucket:ossConfig.bucket,
+		});
+		const catalog = `/images/${sheetId}.png`
+		/* 此处的catalog指的是上传的文件存储在当前Bucket或Bucket下的指定目录 */
+		let result = await client.put(catalog, Buffer.from(file, 'base64'));
+		if(result.res.status === 200){
+			const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId,sheetCover:result.url}).save()
+			ctx.body = {
+			    code:0,
+			    data:{
+			        usheet:saveData
+			    }
+			}
+		}else{
+			ctx.body = {
+			    code:10000,
+				msg:"图片上传失败."
+			}
+		}
+	}else{
+		const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId}).save()
+		ctx.body = {
+			code:0,
+			data:{
+				usheet:saveData
+			}
+		}
+	}
+}
+
+exports.getUserSheet = async (ctx,next) => {
+	const { username } = ctx.session
+	const { _id } = await UserModel.findOne({username})
+	const findData = await UserSheetModel.find({userId:_id})
+	ctx.body = {
+		code:0,
+		data:{
+			usheets:findData
+		}
+	}
 }
