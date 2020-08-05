@@ -52,7 +52,7 @@ exports.LoveSheetModel = LoveSheetModel
 const userSheetSchema = mongoose.Schema({
     sheetId:{type:String,isRequired:true,unique:true},
     userId:{type:String,isRequired:true},
-    name:{type:String,isRequired:true,unique:true},
+    name:{type:String,isRequired:true},
     desc:{type:String,default: ""},
     sheetCover:{type:String,default:''},
     createTime:{type:Number,default:new Date()}

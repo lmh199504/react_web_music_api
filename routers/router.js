@@ -120,6 +120,7 @@ router.post('/user/delLoveSheet',user.delLoveSheet)
 router.get('/user/getLoveSheet',user.getLoveSheets)
 router.post('/user/addUserSheet',user.addUserSheet)
 router.get('/user/getUserSheet',user.getUserSheet)
+router.post('/user/delUserSheet',user.delUserSheet)
 
 router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)

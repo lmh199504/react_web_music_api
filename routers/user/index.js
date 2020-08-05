@@ -1,10 +1,9 @@
 
-const ossConfig = require('../ossConfig')
-const oc = require('co')
-const OSS = require('ali-oss')
 const { UserModel,LoveModel,LoveSingerModel,LoveSheetModel,UserSheetModel } = require('../../db/models')
 const md5 = require('blueimp-md5')
 const uuid = require('uuid')
+const ossConfig = require('../../util/ossConfig')
+const OSS = require('ali-oss')
 const filter = { password:0,__v:0 }  //指定过滤的属性
 exports.register = async (ctx,next) => {
     const { username,password,password2 } = ctx.request.body
@@ -136,6 +135,7 @@ exports.addLoveSong = async (ctx,next) => {
         for(let i=0;i<songList.length;i++){
             let index = list.findIndex(item=>item.songmid === songList[i].songmid)
             if(index === -1){
+                songList[i].checked = false
                 list.push(songList[i])
             }
         }
@@ -389,52 +389,81 @@ exports.getLoveSheets = async (ctx,next) => {
 
 exports.addUserSheet = async (ctx,next) => {
     const { username } = ctx.session
-	const { _id } = await UserModel.findOne({username})
+    const { _id } = await UserModel.findOne({username})
     const { desc,name,file } = ctx.request.body
-	const sheetId = uuid.v1()
-	if(file!== ''){
-		let client = new OSS({ // 连接OSS实例
-		  region:ossConfig.region,
-		  accessKeyId:ossConfig.accessKeyId,
-		  accessKeySecret:ossConfig.accessKeySecret,
-		  bucket:ossConfig.bucket,
-		});
-		const catalog = `/images/${sheetId}.png`
-		/* 此处的catalog指的是上传的文件存储在当前Bucket或Bucket下的指定目录 */
-		let result = await client.put(catalog, Buffer.from(file, 'base64'));
-		if(result.res.status === 200){
-			const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId,sheetCover:result.url}).save()
-			ctx.body = {
-			    code:0,
-			    data:{
-			        usheet:saveData
-			    }
-			}
-		}else{
-			ctx.body = {
-			    code:10000,
-				msg:"图片上传失败."
-			}
-		}
-	}else{
-		const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId}).save()
-		ctx.body = {
-			code:0,
-			data:{
-				usheet:saveData
-			}
-		}
-	}
+
+    const usheets =  await UserSheetModel.find({userId:_id})
+    if(usheets){
+        const index = usheets.findIndex(item => item.name === name)
+        if(index !== -1){
+            ctx.body = {
+                code:10000,
+                msg:"歌单名称重复."
+            }
+            return
+        }
+    }
+    const sheetId = uuid.v1()
+    if(file !== ''){
+        const client = new OSS(ossConfig);
+        const catalog = `/images/${sheetId}.png`
+        const result = await client.put(catalog, Buffer.from(file, 'base64'));
+        if(result.res.status === 200){
+            const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId,sheetCover:result.url}).save()
+            ctx.body = {
+                code:0,
+                data:{
+                    usheet:saveData
+                }
+            }
+        }else{
+            ctx.body = {
+                code:10000,
+                msg:"图片保存失败."
+            }
+        }
+    }else{
+        const saveData = await new UserSheetModel({userId:_id,desc,name,sheetId:sheetId}).save()
+        ctx.body = {
+            code:0,
+            data:{
+                usheet:saveData
+            }
+        }
+    }
+
 }
 
+
 exports.getUserSheet = async (ctx,next) => {
-	const { username } = ctx.session
-	const { _id } = await UserModel.findOne({username})
-	const findData = await UserSheetModel.find({userId:_id})
-	ctx.body = {
-		code:0,
-		data:{
-			usheets:findData
-		}
-	}
+    const { username } = ctx.session
+    const { _id } = await UserModel.findOne({username})
+    const usheets = await UserSheetModel.find({userId:_id})
+    if(usheets){
+        ctx.body = {
+            code:0,
+            data:{
+                usheets
+            }
+        }
+    }else{
+        ctx.body = {
+            code:0,
+            data:{
+                usheets:[]
+            }
+        }
+    }
+}
+exports.delUserSheet = async (ctx,next) => {
+    const { sheetId } = ctx.request.body
+    const { username } = ctx.session
+    const { _id } = await UserModel.findOne({username})
+    const delData = await UserSheetModel.findOneAndDelete({userId:_id,sheetId:sheetId})
+    ctx.body = {
+        code:0,
+        data:{
+            delData
+        }
+    }
 }
