@@ -23,14 +23,14 @@ exec('npm info QQ-Music-API version', (err, stdout, stderr) => {
 
 
 
-
-app.use(bodyParser());
 app.use(koaBody({
   multipart: true,
   formidable: {
     maxFileSize: 200*1024*1024
   }
 }));
+app.use(bodyParser());
+
 app.use(static(
   path.join(__dirname,  'public')
 ));
