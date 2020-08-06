@@ -121,7 +121,9 @@ router.get('/user/getLoveSheet',user.getLoveSheets)
 router.post('/user/addUserSheet',user.addUserSheet)
 router.get('/user/getUserSheet',user.getUserSheet)
 router.post('/user/delUserSheet',user.delUserSheet)
-
+//添加歌曲到指定歌单
+router.post('/user/addSongToSheet',user.addSongToSheet)
+router.post('/user/getUserSheetSong',user.getUserSheetSong)
 router.get('/getHomeClassifid/:curPage?/:size?/:order?/:titleid?',context.getHomeClassifid)
 router.get('/getHomeNewSong/:type?',context.getHomeNewSong)
 router.get('/getHomeNewAblum/:area?',context.getHomeNewAblum)

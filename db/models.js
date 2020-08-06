@@ -34,7 +34,7 @@ const loveSingerSchema = mongoose.Schema({
     singers:{ type:Array,isRequired:true }
 })
 
-const LoveSingerModel = mongoose.model('song',loveSingerSchema)
+const LoveSingerModel = mongoose.model('singer',loveSingerSchema)
 
 exports.LoveSingerModel = LoveSingerModel
 
@@ -59,3 +59,18 @@ const userSheetSchema = mongoose.Schema({
 })
 const UserSheetModel = mongoose.model('usheet',userSheetSchema)
 exports.UserSheetModel = UserSheetModel
+//歌单中的歌曲
+const sheetSongChema = mongoose.Schema({
+    sheetId:{type:String,isRequired:true},
+    userId:{type:String,isRequired:true},
+    songmid:{type:String,isRequired:true},
+    cover:{type:String},
+    interval:{type:Number},
+    title:{type:String},
+    singer:{type:Array},
+    album:{type:Object},
+    albumName:{type:String},
+    checked:{type:Boolean,default:false}
+})
+const SheetSongModel = mongoose.model('sheetsong',sheetSongChema)
+exports.SheetSongModel = SheetSongModel

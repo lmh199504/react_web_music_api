@@ -1,5 +1,5 @@
 
-const { UserModel,LoveModel,LoveSingerModel,LoveSheetModel,UserSheetModel } = require('../../db/models')
+const { UserModel,LoveModel,LoveSingerModel,LoveSheetModel,UserSheetModel,SheetSongModel } = require('../../db/models')
 const md5 = require('blueimp-md5')
 const uuid = require('uuid')
 const ossConfig = require('../../util/ossConfig')
@@ -90,12 +90,20 @@ exports.getUserInfo = async  (ctx,next) => {
     const { username } =  ctx.session
     if(username){
         const findData = await UserModel.findOne({username},filter)
-
-        ctx.status = 200
-        ctx.body = {
-            code:0,
-            data:findData
+        if(findData){
+            ctx.status = 200
+            ctx.body = {
+                code:0,
+                data:findData
+            }
+        }else{
+            ctx.status = 200
+            ctx.body = {
+                code:10000,
+                msg:'请先登陆'
+            }
         }
+
     }else {
         ctx.status = 200
         ctx.body = {
@@ -118,6 +126,12 @@ exports.logout = async (ctx,next) => {
 
 exports.addLoveSong = async (ctx,next) => {
     const { userId } = ctx.request.body
+    if(!userId){
+        ctx.body = {
+            code:10000,
+            msg:"参数错误"
+        }
+    }
     let { songList } = ctx.request.body
 
     const result = await LoveModel.findOne({userId})
@@ -304,7 +318,6 @@ exports.addLoveSheet = async (ctx,next) => {
         const findData = await LoveSheetModel.findOne({userId:_id})
         if(!findData){
             const saveData = await new LoveSheetModel({userId:_id,sheets:[{...sheet}]}).save()
-            console.log(saveData)
             ctx.body = {
                 code:0,
                 data:{
@@ -464,6 +477,62 @@ exports.delUserSheet = async (ctx,next) => {
         code:0,
         data:{
             delData
+        }
+    }
+}
+
+//添加歌曲到用户创建的歌单
+exports.addSongToSheet = async (ctx,next) => {
+    const { sheetId,songList } = ctx.request.body
+    if(!sheetId || !songList){
+        ctx.body = {
+            code:10000,
+            msg:"参数错误"
+        }
+        return
+    }
+    console.log(songList)
+    const { username } = ctx.session
+    const { _id } = await UserModel.find({username})
+    const findData = await SheetSongModel.find({userId:_id,sheetId:sheetId})
+    let num = 0;
+    for(let i = 0;i<songList.length;i++ ){
+        // const findData = await SheetSongModel.find({userId:_id,sheetId:sheetId})
+        const index = findData.findIndex(item => item.songmid === songList[i].songmid)
+        if(index === -1){ //歌曲不在收歌单中
+            songList[i].checked = false
+            await new SheetSongModel({userId:_id,sheetId,...songList[i]}).save()
+            num ++
+        }else{
+            console.log('第'+(i+1)+'首歌已在歌单中')
+        }
+    }
+
+    ctx.body = {
+        code:0,
+        data:{
+            num
+        }
+    }
+}
+//获取用户创建的歌单的歌曲
+exports.getUserSheetSong = async (ctx,next) => {
+    const { sheetId } = ctx.request.body
+    console.log(sheetId)
+    if(!sheetId){
+        ctx.body = {
+            code:10000,
+            msg:"sheetId is error"
+        }
+    }else{
+        const sheetData = await UserSheetModel.findOne({sheetId},filter)
+        const songList = await SheetSongModel.find({sheetId},filter)
+        ctx.body = {
+            code:0,
+            data:{
+                songList,
+                sheetData
+            }
         }
     }
 }
