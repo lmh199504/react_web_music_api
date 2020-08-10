@@ -30,8 +30,10 @@ exports.LoveModel = LoveModel
 
 //喜欢的歌手
 const loveSingerSchema = mongoose.Schema({
-    userId:{ type:String,isRequired:true,unique:true },
-    singers:{ type:Array,isRequired:true }
+    userId:{ type:String,isRequired:true},
+    singermid:{type:String,isRequired:true},
+    singerName:{type:String,isRequired:true},
+    orderId:{type:String,isRequired:true,unique:true}
 })
 
 const LoveSingerModel = mongoose.model('singer',loveSingerSchema)

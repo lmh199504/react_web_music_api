@@ -212,32 +212,20 @@ exports.addLoveSinger = async (ctx,next) => {
     const { singer } =  ctx.request.body
     const { username } = ctx.session
     const { _id } = await UserModel.findOne({username})
-    console.log(_id)
-    const findData = await LoveSingerModel.findOne({userId:_id})
-    if(!findData){
-        const saveData = await new LoveSingerModel({userId:_id,singers:[{...singer}]}).save()
+    const findData = await LoveSingerModel.find({userId:_id})
+    const index = findData.findIndex(item => item.singermid === singer.singermid)
+    if(index === -1){
+        await new LoveSingerModel({userId:_id,userId:_id,...singer,orderId:_id+singer.singermid}).save()
         ctx.body = {
             code:0,
             data:{
-                singers:saveData.singers
+                singer
             }
         }
     }else{
-        let { singers } = findData
-        const index = singers.findIndex(item => item.singermid === singer.singermid)
-        if(index === -1){
-            await LoveSingerModel.findOneAndUpdate({userId:_id},{singers:[...singers,singer]})
-            ctx.body = {
-                code:0,
-                data:{
-                    singer:[...singers,singer]
-                }
-            }
-        }else{
-            ctx.body = {
-                code:10000,
-                msg:"已经关注了."
-            }
+        ctx.body = {
+            code:10000,
+            msg:"已经关注了."
         }
     }
 }
@@ -247,7 +235,7 @@ exports.delLoveSinger = async (ctx,next) => {
     const { singer } = ctx.request.body
     const { username } = ctx.session
     const { _id } = await UserModel.findOne({username})
-    const findeData = await LoveSingerModel.findOne({userId:_id})
+    const findeData = await LoveSingerModel.find({userId:_id})
 
     if(findeData === null){
         ctx.body = {
@@ -255,21 +243,11 @@ exports.delLoveSinger = async (ctx,next) => {
             msg:'没有关注该歌手.'
         }
     }else {
-        const {singers} = findeData
-        const index = singers.findIndex(item => item.singermid === singer.singermid)
-        if(index === -1){
-            ctx.body = {
-                code:10000,
-                msg:'没有关注该歌手.'
-            }
-        }else{
-            singers.splice(index,1)
-            await LoveSingerModel.findOneAndUpdate({userId:_id},{singers})
-            ctx.body = {
-                code:0,
-                data:{
-                    singers
-                }
+        const delData = await LoveSingerModel.findOneAndDelete({userId:_id,singermid:singer.singermid})
+        ctx.body = {
+            code:0,
+            data:{
+                delData
             }
         }
     }
@@ -285,7 +263,7 @@ exports.getLoveSinger = async (ctx,next) => {
         }
     }else{
         const { _id } = await UserModel.findOne({username})
-        const findData = await LoveSingerModel.findOne({userId:_id})
+        const findData = await LoveSingerModel.find({userId:_id})
         if(!findData){
             ctx.body = {
                 code:0,
@@ -297,7 +275,7 @@ exports.getLoveSinger = async (ctx,next) => {
             ctx.body = {
                 code:0,
                 data:{
-                    singers:findData.singers
+                    singers:findData
                 }
             }
         }
