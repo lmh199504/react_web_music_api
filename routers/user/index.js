@@ -112,6 +112,48 @@ exports.getUserInfo = async  (ctx,next) => {
         }
     }
 }
+exports.updateUserInfo = async (ctx,next) => {
+    const { username } = ctx.session
+    const { newUsername,newPassword,file,newPrivite } = ctx.request.body
+    const findData = await UserModel.findOne({username})
+    if(!findData._id){
+        ctx.body = {
+            code:10000,
+            msg:"没有该用户."
+        }
+        return
+    }
+    if(file){
+        const client = new OSS(ossConfig);
+        const catalog = `/userheader/${findData._id}.png`
+        const result = await client.put(catalog, Buffer.from(file, 'base64'));
+        if(result.res.status === 200){
+            const upData = await UserModel.findOneAndUpdate({username},{username:!newUsername?username:newUsername.trim(),password:!newPassword?findData.password:md5(newPassword),headerImg:result.url,isPrivate:!newPrivite?findData.isPrivate:newPrivite})
+            ctx.body = {
+                code:0,
+                data:{
+                    upData
+                }
+            }
+        }else{
+            ctx.body = {
+                code:10000,
+                msg:"图片保存失败."
+            }
+        }
+    }else {
+        const upData = await UserModel.findOneAndUpdate({username},{username:!newUsername?username:newUsername.trim(),password:!newPassword?findData.password:md5(newPassword),isPrivate:!newPrivite?findData.isPrivate:newPrivite})
+
+        ctx.body = {
+            code:0,
+            data:{
+                upData
+            }
+        }
+    }
+}
+
+
 
 exports.logout = async (ctx,next) => {
     ctx.session.username = undefined
@@ -134,58 +176,42 @@ exports.addLoveSong = async (ctx,next) => {
     }
     let { songList } = ctx.request.body
 
-    const result = await LoveModel.findOne({userId})
-
-    if(result === null){
-        const saveData =  await new LoveModel({userId,songList}).save()
-        ctx.body = {
-            code:0,
-            data:{
-                songList
-            }
+    const list = await LoveModel.find({userId})
+    let num = 0
+    for(let i=0;i<songList.length;i++){
+        let index = list.findIndex(item=>item.songmid === songList[i].songmid)
+        if(index === -1){
+            await new LoveModel({userId,...songList[i]}).save()
+            num ++
         }
-    }else{
-        const list = result.songList
-        for(let i=0;i<songList.length;i++){
-            let index = list.findIndex(item=>item.songmid === songList[i].songmid)
-            if(index === -1){
-                songList[i].checked = false
-                list.push(songList[i])
-            }
-        }
-
-        const upData = await LoveModel.findOneAndUpdate({userId},{$set:{'songList':list}})
-        ctx.body = {
-            code:0,
-            data:{
-                songList:list
-            }
-        }
-
     }
+
+    ctx.body = {
+        code:0,
+        data:{
+            num
+        }
+    }
+
+
 
 }
 
 
 exports.delLoveSong = async (ctx,next) => {
     const { userId,delList } = ctx.request.body
-
-    let { songList } =  await LoveModel.findOne({userId})
-
+    let num = 0
     for(let i = 0;i<delList.length;i++){
-        let index = songList.findIndex(item => item.songmid === delList[i].songmid)
-        if(index !== -1){
-            songList.splice(index,1)
-        }
+        await LoveModel.findOneAndDelete({userId,songmid:delList[i].songmid})
+        num ++
     }
-    const upData = await LoveModel.findOneAndUpdate({userId},{$set:{songList:songList}})
-    // console.log(upData)
     ctx.body = {
         code:0,
         data:{
-            songList:songList
+            num
         }
     }
+
 }
 
 
@@ -193,17 +219,12 @@ exports.getLoveSong = async (ctx,next) => {
 
     const { username } = ctx.session
     const { _id } = await UserModel.findOne({username})
-    const findData = await LoveModel.findOne({userId:_id})
+    const findData = await LoveModel.find({userId:_id})
 
-    if(findData === null){
-        ctx.body = {
-            code:0,
-            data:{songList:[]}
-        }
-    }else{
-        ctx.body = {
-            code:0,
-            data:{songList:findData.songList}
+    ctx.body = {
+        code:0,
+        data:{
+            songList:findData
         }
     }
 }
@@ -377,7 +398,7 @@ exports.getLoveSheets = async (ctx,next) => {
     }
 }
 
-
+//创建歌单
 exports.addUserSheet = async (ctx,next) => {
     const { username } = ctx.session
     const { _id } = await UserModel.findOne({username})

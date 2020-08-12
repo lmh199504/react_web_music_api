@@ -121,6 +121,9 @@ router.get('/user/getLoveSheet',user.getLoveSheets)
 router.post('/user/addUserSheet',user.addUserSheet)
 router.get('/user/getUserSheet',user.getUserSheet)
 router.post('/user/delUserSheet',user.delUserSheet)
+//更新用户信息
+router.post('/user/updateUserInfo',user.updateUserInfo)
+
 //添加歌曲到指定歌单
 router.post('/user/addSongToSheet',user.addSongToSheet)
 router.post('/user/getUserSheetSong',user.getUserSheetSong)

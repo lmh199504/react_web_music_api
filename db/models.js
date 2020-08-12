@@ -13,7 +13,8 @@ const userSchema = mongoose.Schema({
     password:{type:String,isRequired: true},
     headerImg:{type:String,default:'https://reactlmh.oss-cn-beijing.aliyuncs.com/heaher/23073179092.jpg'},
     tags:{type:Array},
-    token:{type:String}
+    token:{type:String},
+    isPrivate:{type:Boolean,default:false}
 })
 const UserModel = mongoose.model('user',userSchema)
 exports.UserModel = UserModel
@@ -21,8 +22,15 @@ exports.UserModel = UserModel
 
 //喜欢的歌曲
 const loveSongSchema = mongoose.Schema({
-    userId:{type:String,isRequired:true,unique:true},
-    songList:{type:Array,isRequired:true}
+    userId:{type:String,isRequired:true},
+    // songList:{type:Array,isRequired:true}
+    songmid:{type:String,isRequired:true},
+    singer:{type:Array,isRequired:true},
+    title:{type:String,isRequired:true},
+    interval:{type:Number,isRequired:true},
+    cover:{type:String,isRequired:true},
+    album:{type:Object,isRequired:true},
+    albumName:{type:String,isRequired:true}
 })
 const LoveModel = mongoose.model('love',loveSongSchema)
 exports.LoveModel = LoveModel
