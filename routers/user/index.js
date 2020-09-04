@@ -88,7 +88,8 @@ exports.login = async (ctx,next) => {
 
 exports.getUserInfo = async  (ctx,next) => {
     const { username } =  ctx.session
-    if(username){
+	console.log(username)
+    if(!!username){
         const findData = await UserModel.findOne({username},filter)
         if(findData){
             ctx.status = 200
