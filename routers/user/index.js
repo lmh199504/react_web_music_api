@@ -113,6 +113,35 @@ exports.getUserInfo = async  (ctx,next) => {
         }
     }
 }
+
+exports.getUserInfoById = async ( ctx,next ) => {
+	const { userId } = ctx.request.body
+	if(!!userId){
+		const findData = await UserModel.findOne({_id:userId},filter)
+		if(findData){
+		    ctx.status = 200
+		    ctx.body = {
+		        code:0,
+		        data:findData
+		    }
+		}else{
+		    ctx.status = 200
+		    ctx.body = {
+		        code:10000,
+		        msg:'请先登陆'
+		    }
+		}
+		
+	}else{
+		ctx.status = 200
+		ctx.body = {
+		    code:10000,
+		    msg:'请先登陆'
+		}
+	}
+	
+}
+
 exports.updateUserInfo = async (ctx,next) => {
     const { username } = ctx.session
     const { newUsername,newPassword,file,newPrivite } = ctx.request.body
@@ -536,3 +565,5 @@ exports.getUserSheetSong = async (ctx,next) => {
         }
     }
 }
+
+

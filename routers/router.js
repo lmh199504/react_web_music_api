@@ -105,6 +105,7 @@ router.post('/user/login',user.login)
 
 //userinfo
 router.get('/user/getuserinfo',user.getUserInfo)
+router.post('/user/getUserInfoById',user.getUserInfoById)
 
 //logout
 router.get('/user/logout',user.logout)
