@@ -14,7 +14,7 @@ module.exports = async(ctx,next) => {
         radioId
     } = ctx.request.query
 
-    console.log(radioId)
+    // console.log(radioId)
     const params = Object.assign(commonParams, {
         format: "json",
         inCharset: "utf8",
