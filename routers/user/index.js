@@ -568,4 +568,20 @@ exports.getUserSheetSong = async (ctx,next) => {
     }
 }
 
+exports.uploadFile = async (ctx,next) => {
 
+	const files = ctx.request.files
+	// 文件路径
+	var filePath = files.file.path;
+	// 文件类型
+	var temp = files.file.name.split('.');
+	var fileType = temp[temp.length - 1];
+	var lastName = '.' + fileType;
+	// 构建图片名
+	var fileName = Date.now() + lastName;
+	const client = new OSS(ossConfig);
+	var result =  await client.put(`/files/${files.file.name}`, filePath);
+	ctx.body = {
+		...result
+	}
+}

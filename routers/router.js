@@ -102,7 +102,7 @@ router.get('/getTicketInfo', context.getTicketInfo);
 router.post('/user/register',user.register)
 //login
 router.post('/user/login',user.login)
-
+router.post('/user/uploadFile',user.uploadFile)
 //userinfo
 router.get('/user/getuserinfo',user.getUserInfo)
 router.post('/user/getUserInfoById',user.getUserInfoById)

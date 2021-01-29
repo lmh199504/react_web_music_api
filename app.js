@@ -29,6 +29,7 @@ app.use(koaBody({
     maxFileSize: 200*1024*1024
   }
 }));
+
 app.use(bodyParser());
 
 app.use(static(
