@@ -134,4 +134,12 @@ router.get('/getHomeNewAblum/:area?',context.getHomeNewAblum)
 
 router.get('/getRadioSong/:radioId?',context.getRadioSong)
 
+
+//上传视频
+router.post('/user/uploadVideo',user.uploadVideo)
+//获取上传的视频
+router.get('/user/getUserVideo',user.getUserVideo)
+//删除上传的视频
+router.post('/user/delUserVideo',user.delUserVideo)
+
 module.exports = router;

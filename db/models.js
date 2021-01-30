@@ -84,3 +84,15 @@ const sheetSongChema = mongoose.Schema({
 })
 const SheetSongModel = mongoose.model('sheetsong',sheetSongChema)
 exports.SheetSongModel = SheetSongModel
+
+
+const userUploadVideoSchema = mongoose.Schema({
+	userId:{type:String,isRequired:true},
+	desc:{type:String},
+	title:{type:String},
+	createTime:{type:Number,default:Date.now()},
+	url:{type:String},
+	picurl:{type:String,default:'https://reactlmh.oss-cn-beijing.aliyuncs.com/images/ccd2a280-d652-11ea-8d08-bbc0b0f9d824.png'}
+})
+const userUploadVideoModel = mongoose.model('userUpVideo',userUploadVideoSchema)
+exports.userUploadVideoModel = userUploadVideoModel
