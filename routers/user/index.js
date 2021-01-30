@@ -854,13 +854,9 @@ exports.uploadVideo = async (ctx, next) => {
 		url: result.url,
 		picurl: posterUrl
 	}).save()
-	console.log(saveData)
-	
 	ctx.body = {
 		code: 0,
-		data: {
-			...saveData._doc
-		}
+		data: saveData
 	}
 }
 
