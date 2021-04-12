@@ -13,7 +13,7 @@ module.exports = async(ctx,next) => {
     const {
         singermid,
         order = 1,
-        limit = 10
+        limit = 1000
     } = ctx.request.query
     const params = Object.assign(commonParams, {
         format: "json",
